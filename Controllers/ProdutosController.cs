@@ -1,29 +1,36 @@
 using ApiCliente.Models;
 using ApiCliente.ModelViews;
 using Microsoft.AspNetCore.Mvc;
+using ApiCliente.Repositorios.Interfaces;
 
 namespace ApiCliente.Controllers;
 
 [Route("produtos")]
 public class ProdutosController : ControllerBase
 {
+    private Iprodutos _produto;
+    public ProdutosController(Iprodutos produto)
+    {
+       _produto = produto;
+    }
+
     [HttpGet("")]
     public IActionResult Index()
     {
-        var produtos = ProdutoRepositorio.Instancia().ListaProduto;
+        var produtos =_produto.Mostrar();
         return StatusCode(200,  produtos);
     }
     [HttpGet("{id}")]
     public IActionResult Details([FromRoute] int id)
     {
-       var produto = ProdutoRepositorio.Instancia().ListaProduto.Find(c => c.Id == id);
+       var produto =_produto.Mostrar().Find(c => c.Id == id);
 
         return StatusCode(200, produto);
     }
     [HttpPost("")]
     public IActionResult Create([FromBody] Produto produto)
     {
-        ProdutoRepositorio.Instancia().ListaProduto.Add(produto);
+       _produto.Salvar(produto);
         return StatusCode(201, produto);
     }
     [HttpPut("{id}")]
@@ -36,27 +43,14 @@ public class ProdutosController : ControllerBase
             });
         }
 
-       var produtoDb = ProdutoRepositorio.Instancia().ListaProduto.Find(c => c.Id == id);
-       if(produtoDb is null)
-       {
-            return StatusCode(404, new {
-                Mensagem = "O produto não existe"
-            });
-        }
-
-        produtoDb.Nome = produto.Nome;
-        produtoDb.Descricao = produto.Descricao;
-        produtoDb.Entrada = produto.Entrada;
-        produtoDb.Validade = produto.Validade;
-        produtoDb.Quantidade = produto.Quantidade;
-        
-
+       var produtoDb =_produto.Atualizar(produto);
         return StatusCode(200, produtoDb);
     }
+
     [HttpDelete("{id}")]
     public IActionResult Delete([FromRoute] int id)
     {
-        var produtoDb = ProdutoRepositorio.Instancia().ListaProduto.Find(c => c.Id == id);
+        var produtoDb =_produto.Mostrar().Find(c => c.Id == id);
         if(produtoDb is null)
         {
             return StatusCode(404, new {
@@ -64,7 +58,7 @@ public class ProdutosController : ControllerBase
             });
         }
 
-        ProdutoRepositorio.Instancia().ListaProduto.Remove(produtoDb);
+       _produto.Apagar(produtoDb);
 
         return RedirectToAction(nameof(Index));
     }

@@ -6,7 +6,7 @@ namespace ApiCliente.ModelViews;
 public class ProdutoRepositorio : Iprodutos
 {
     
-    public  List<Produto> listaProduto = new List<Produto>();
+    public static  List<Produto> listaProduto = new List<Produto>();
 
     public List<Produto> Mostrar()
     {

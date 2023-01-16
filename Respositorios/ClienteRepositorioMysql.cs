@@ -16,7 +16,7 @@ public class ClienteRepositorioMysql : Iservico
      private static List<Cliente> lista = new List<Cliente>();
 
 
-    public List<Cliente> Todos()
+    public async Task<List<Cliente>> TodosAsync()
     {
         var lista = new List<Cliente>();
         using(var conex = new MySqlConnection(conexao))
@@ -25,7 +25,7 @@ public class ClienteRepositorioMysql : Iservico
             var query = $"select * from cliente;";
 
             var command = new MySqlCommand(query, conex);
-            var dataR = command.ExecuteReader();
+            var dataR = await command.ExecuteReaderAsync();
             while(dataR.Read())
             {
                 lista.Add(new Cliente{
@@ -42,7 +42,7 @@ public class ClienteRepositorioMysql : Iservico
        
     }
 
-    public void Salvar(Cliente cliente)
+    public async Task SalvarAsync(Cliente cliente)
     {
         
         using(var conex = new MySqlConnection(conexao))
@@ -55,7 +55,7 @@ public class ClienteRepositorioMysql : Iservico
             //int id = Convert.ToInt32(command.ExecuteScalar()) ;
             command.Parameters.Add(new MySqlParameter("@nome", cliente.Nome));
             command.Parameters.Add(new MySqlParameter("@email", cliente.Email));
-            command.ExecuteNonQuery();
+            await command.ExecuteNonQueryAsync();
 
             conex.Close();
             
@@ -64,7 +64,7 @@ public class ClienteRepositorioMysql : Iservico
         
     }
 
-    public Cliente Atualizar(Cliente cliente)
+    public async Task<Cliente> AtualizarAsync(Cliente cliente)
     {
         using(var conex = new MySqlConnection(conexao))
         {
@@ -75,7 +75,7 @@ public class ClienteRepositorioMysql : Iservico
             command.Parameters.Add(new MySqlParameter("@id", cliente.Id));
             command.Parameters.Add(new MySqlParameter("@nome", cliente.Nome));
             command.Parameters.Add(new MySqlParameter("@email", cliente.Email));
-            command.ExecuteNonQuery();
+            await command.ExecuteNonQueryAsync();
 
             conex.Close();
             
@@ -84,7 +84,7 @@ public class ClienteRepositorioMysql : Iservico
         
     }
 
-    public void Apagar(Cliente cliente)
+    public async Task ApagarAsync(Cliente cliente)
     {
         using(var conex = new MySqlConnection(conexao))
         {
@@ -92,7 +92,7 @@ public class ClienteRepositorioMysql : Iservico
             var query = $"delete from  cliente where id = @id;";
             var command = new MySqlCommand(query, conex);
             command.Parameters.Add(new MySqlParameter("@id", cliente.Id));
-            command.ExecuteNonQuery();
+            await command.ExecuteNonQueryAsync();
             conex.Close();    
         }  
     }

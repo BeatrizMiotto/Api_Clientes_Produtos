@@ -27,35 +27,35 @@ public class ClienteRepositorioEntity : Iservico
     private string? conexao = null;
 
 
-    public List<Cliente> Todos()
+    public async Task<List<Cliente>> TodosAsync()
     {
         
-        return contexto.Cliente.ToList();
+        return await contexto.Cliente.ToListAsync();
        
     }
 
-    public void Salvar(Cliente cliente)
+    public async Task SalvarAsync(Cliente cliente)
     {  
         contexto.Cliente.Add(cliente);
-        contexto.SaveChanges(); 
+        await contexto.SaveChangesAsync(); 
     }
 
-    public Cliente Atualizar(Cliente cliente)
+    public async Task<Cliente> AtualizarAsync(Cliente cliente)
     {
         contexto.Entry(cliente).State = EntityState.Modified;
         
-        contexto.SaveChanges();
+        await contexto.SaveChangesAsync();
 
         return cliente;
         
     }
 
-    public void Apagar(Cliente cliente)
+    public async Task ApagarAsync(Cliente cliente)
     {
-        var excluir = contexto.Cliente.Find(cliente.Id);
+        var excluir = await contexto.Cliente.FindAsync(cliente.Id);
         if(excluir is null) throw new Exception("Cliente não localizado.");
         contexto.Cliente.Remove(excluir);
-        contexto.SaveChanges();
+        await contexto.SaveChangesAsync();
         
     }
 }

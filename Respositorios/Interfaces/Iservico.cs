@@ -4,8 +4,8 @@ namespace ApiCliente.Repositorios.Interfaces;
 
 public interface Iservico
 {
-    List<Cliente> Todos();
-    void Salvar(Cliente cliente);
-    Cliente Atualizar(Cliente cliente);
-    void Apagar(Cliente cliente);
+    Task<List<Cliente>> TodosAsync();
+    Task SalvarAsync(Cliente cliente);
+    Task<Cliente> AtualizarAsync(Cliente cliente);
+    Task ApagarAsync(Cliente cliente);
 }

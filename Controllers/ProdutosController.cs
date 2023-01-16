@@ -60,7 +60,7 @@ public class ProdutosController : ControllerBase
 
        _produto.Apagar(produtoDb);
 
-        return RedirectToAction(nameof(Index));
+        return StatusCode(204);
     }
     
 }

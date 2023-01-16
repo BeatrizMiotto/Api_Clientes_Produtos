@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using ApiCliente.Models;
 using ApiCliente.ModelViews;
 using ApiCliente.Repositorios.Interfaces;
+using ApiCliente.Servicos;
+using ApiCliente.DTOs;
 
 namespace ApiCliente.Controllers;
 
@@ -28,8 +30,9 @@ public class ClientesController : ControllerBase
         return StatusCode(200, cliente);
     }
     [HttpPost("")]
-    public async Task<IActionResult> Create([FromBody] Cliente cliente)
+    public async Task<IActionResult> Create([FromBody] ClienteDTO clienteDTO)
     {
+        var cliente = BuilderServico<Cliente>.Builder(clienteDTO);
         await _servico.SalvarAsync(cliente);
         return StatusCode(201, cliente);
     }

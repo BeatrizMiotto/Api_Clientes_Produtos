@@ -60,7 +60,7 @@ public class ClientesController : ControllerBase
 
         _servico.Apagar(clienteDb);
 
-        return RedirectToAction(nameof(Index));
+        return StatusCode(204);
     }
     
 }
